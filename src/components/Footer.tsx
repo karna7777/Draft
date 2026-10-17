@@ -2,41 +2,29 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="ft tone-charcoal">
-      <div className="wrap ft-in">
-        <div className="ft-cta">
-          <p className="eyebrow accent">Start drafting</p>
-          <h2 className="ft-word">Draft</h2>
-          <Link className="btn-solid" href="/create">Start designing</Link>
+    <footer className="lfoot">
+      <div className="lfoot-top">
+        <div className="lfoot-brand">
+          <span className="lnav-mark" aria-hidden="true" />
+          Draft
         </div>
-
-        <div className="ft-cols">
+        <nav className="lfoot-cols">
           <div>
-            <h5>Product</h5>
-            <a href="#concept">How it works</a>
+            <span className="lfoot-h mono">PRODUCT</span>
+            <Link href="/create">Architect</Link>
             <Link href="/editor">Editor</Link>
-            <a href="#styles">Styles</a>
-            <a href="#gallery">Gallery</a>
+            <Link href="/projects">Projects</Link>
           </div>
           <div>
-            <h5>Studio</h5>
-            <a href="#">About</a>
-            <a href="#">For architects</a>
-            <a href="#">Journal</a>
-            <a href="#">Contact</a>
+            <span className="lfoot-h mono">ACCOUNT</span>
+            <Link href="/login">Sign in</Link>
+            <Link href="/register">Create account</Link>
           </div>
-          <div>
-            <h5>Get started</h5>
-            <Link href="/create">Create a design</Link>
-            <a href="#">Pricing</a>
-            <a href="#">Help center</a>
-            <a href="#">Log in</a>
-          </div>
-        </div>
+        </nav>
       </div>
-      <div className="wrap ft-bar">
-        <span>© 2026 Draft — a student project. Conceptual designs, not construction documents.</span>
-        <span>Terms · Privacy</span>
+      <div className="lfoot-bottom">
+        <p className="mono">Conceptual design for exploration — not construction documents. Review by a licensed professional required before building.</p>
+        <span className="mono">© {new Date().getFullYear()} Draft</span>
       </div>
     </footer>
   );

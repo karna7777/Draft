@@ -1,56 +1,33 @@
 import type { Metadata } from "next";
-import { Archivo, Newsreader, Fraunces, IBM_Plex_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 
-const archivo = Archivo({
+// Display — distinctive, architectural grotesque.
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-  variable: "--font-archivo",
-  display: "swap",
-});
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  variable: "--font-newsreader",
-  display: "swap",
-});
-// High-contrast editorial display face — the "luxury architectural" voice.
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  style: ["normal", "italic"],
   weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-fraunces",
+  variable: "--font-bricolage",
   display: "swap",
 });
-const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-plex-mono",
-  display: "swap",
-});
+// Body — clean, modern.
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
+// Mono — dimensions, labels, technical readouts.
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
 
 export const metadata: Metadata = {
   title: "Draft — Design the home you've imagined",
   description:
-    "Draft is an AI residential design studio. Describe what you want in plain words and get editable floor plans you can explore, refine, and visualize.",
+    "Draft is an AI residential design studio. Describe a home in plain words, watch it build itself in 3D, edit it in 2D/3D, and design every room — conceptually.",
 };
-
-// Set the theme before paint to avoid a flash of the wrong palette.
-const themeScript = `(function(){try{var t=localStorage.getItem('draft-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      suppressHydrationWarning
-      className={`${archivo.variable} ${newsreader.variable} ${fraunces.variable} ${plexMono.variable}`}
+      className={`${bricolage.variable} ${geist.variable} ${geistMono.variable}`}
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
       <body>
-        <div className="grain" aria-hidden="true" />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
