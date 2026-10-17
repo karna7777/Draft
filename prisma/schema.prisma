@@ -1,0 +1,98 @@
+// Draft — data model (Phase 1 foundation).
+// User → Project → Floor → Room, with a Session table for cookie auth.
+// Rooms are stored as structured rows (not screenshots): real-world feet,
+// with screen pixels derived at render time. Deeper design entities
+// (moodboards, palettes, materials, budget, AI generations, sharing) are
+// introduced in later phases as sibling relations off Project / Room.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // SQLite keeps the app self-contained and laptop-friendly. Swap `provider`
+  // to "postgresql" and the DATABASE_URL to deploy on a hosted Postgres.
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  password  String // scrypt hash, stored as salt:hash
+  createdAt DateTime  @default(now())
+  projects  Project[]
+  sessions  Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Project {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name   String
+  prompt String @default("")
+
+  // Brief / requirements
+  bedrooms    Int     @default(3)
+  bathrooms   Int     @default(2)
+  floorsCount Int     @default(2)
+  plotW       Float   @default(30)
+  plotH       Float   @default(50)
+  unit        String  @default("ft") // "ft" | "m"
+  parking     Boolean @default(true)
+  style       String  @default("Warm Modern")
+  budget      Float?
+  location    String?
+  notes       String?
+
+  activeFloor Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  floors Floor[]
+
+  @@index([userId])
+}
+
+model Floor {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name      String
+  level     Int     @default(0) // ordering within the project
+  rooms     Room[]
+
+  @@index([projectId])
+}
+
+model Room {
+  id      String @id @default(cuid())
+  floorId String
+  floor   Floor  @relation(fields: [floorId], references: [id], onDelete: Cascade)
+
+  // `rid` is the client-side room key (e.g. "master") — stable through drags,
+  // used for React keys and as the anchor for room-level design data later.
+  rid      String
+  name     String
+  type     String // "living" | "kitchen" | "bed" | "bath" | "service"
+  x        Float
+  y        Float
+  w        Float
+  h        Float
+  rotation Float  @default(0)
+
+  @@index([floorId])
+}

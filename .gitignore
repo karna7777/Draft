@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.mcp.json
+
+# local env & sqlite
+.env
+/prisma/dev.db
+/prisma/dev.db-journal
+# Playwright CLI output (may contain credentials)
+.playwright-cli/
