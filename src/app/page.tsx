@@ -1,6 +1,6 @@
 import Link from "next/link";
 import LandingNav from "@/components/landing/LandingNav";
-import FilmStory from "@/components/landing/FilmStory";
+import HeroStage from "@/components/landing/HeroStage";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -8,8 +8,8 @@ export default function Home() {
     <>
       <LandingNav />
       <main id="film">
-        {/* the film — a scroll-driven 3D story (house → plan → room → style) */}
-        <FilmStory />
+        {/* the hero — a scripted "prompt → architecture" sequence */}
+        <HeroStage />
 
         {/* closing */}
         <section className="closing">

@@ -3,6 +3,11 @@
 "use client";
 
 import type { Brief, Project } from "./store";
+import type { PlanData } from "./plan";
+
+export interface AiFurnitureItem {
+  kind: string; name: string; x: number; z: number; w: number; d: number; rot: number; price: number;
+}
 
 async function req<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, {
@@ -76,3 +81,16 @@ export const duplicateProject = (id: string) =>
 
 export const deleteProject = (id: string) =>
   req<{ ok: true }>(`/api/projects/${id}`, { method: "DELETE" });
+
+// ---- AI ----
+export const generatePlan = (brief: string) =>
+  req<{ plan: PlanData; source: "ai" | "mock"; demoMode: boolean }>("/api/ai", {
+    method: "POST",
+    body: JSON.stringify({ action: "plan", brief }),
+  });
+
+export const furnishRoom = (roomType: string, style: string) =>
+  req<{ items: AiFurnitureItem[]; source: "ai" | "mock"; demoMode: boolean }>("/api/ai", {
+    method: "POST",
+    body: JSON.stringify({ action: "furnish", roomType, style }),
+  });
