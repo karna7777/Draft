@@ -1,6 +1,8 @@
 import Link from "next/link";
 import LandingNav from "@/components/landing/LandingNav";
 import HeroStage from "@/components/landing/HeroStage";
+import Chapters from "@/components/landing/Chapters";
+import InteriorShowcase from "@/components/landing/InteriorShowcase";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -10,6 +12,12 @@ export default function Home() {
       <main id="film">
         {/* the hero — a scripted "prompt → architecture" sequence */}
         <HeroStage />
+
+        {/* horizontal 3D sliding cards — how Draft works */}
+        <Chapters />
+
+        {/* step into the room — live interior restyling */}
+        <InteriorShowcase />
 
         {/* closing */}
         <section className="closing">

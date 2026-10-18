@@ -36,10 +36,12 @@ export default function HeroStage() {
   const [mounted, setMounted] = useState(false);
   const [cssFallback, setCssFallback] = useState(false); // phone or no-WebGL → lightweight static
   const [reduce, setReduce] = useState(false);
+  const [inView, setInView] = useState(true);
   const [typed, setTypedLocal] = useState("");
   const [busy, setBusy] = useState(false);
   const [playing, setPlaying] = useState(false);
 
+  const sectionRef = useRef<HTMLElement>(null);
   const seq = useRef<SeqControls | null>(null);
   const timers = useRef<number[]>([]);
   const clearTimers = () => { timers.current.forEach(clearTimeout); timers.current = []; };
@@ -79,6 +81,16 @@ export default function HeroStage() {
     return () => { clearTimers(); seq.current?.kill(); };
   }, [typeThenPlay]);
 
+  // Keep only one WebGL canvas live at a time — unmount the scene when the hero
+  // is scrolled away (frees the GL context; one canvas composites reliably).
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { rootMargin: "100px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   async function onSubmit(brief: string) {
     if (busy) return;
     // phone / no-GL / reduced-motion → the full generate+save flow lives on /create
@@ -104,10 +116,10 @@ export default function HeroStage() {
   }
 
   return (
-    <section className="hs" id="hero">
+    <section className="hs" id="hero" ref={sectionRef}>
       <div className="hs-sky" aria-hidden="true" />
       <div className="hs-canvas">
-        {mounted && !cssFallback && <HeroScene reduce={reduce} />}
+        {mounted && !cssFallback && inView && <HeroScene reduce={reduce} />}
         {mounted && cssFallback && (
           <div className="hs-fallback" aria-hidden="true">
             <div className="mfb-plan"><span /><span /><span /><span /><span /></div>
